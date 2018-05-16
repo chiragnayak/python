@@ -1,0 +1,6 @@
+Q. What is interperter?
+Q. What is compiler ?
+Q. What are tuples ?
+Q. How to Create lists ?
+Q. How to create tuples ?
+Q. How to create ranges?
