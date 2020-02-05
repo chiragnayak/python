@@ -12,6 +12,7 @@ print (dishes.keys())
 print (dishes.values())
 print (list(keys))
 print (list(values))
+print("This is a dummy comment to enable git compare")
 
 while True : 
 	key = input("Enter Key : ")
