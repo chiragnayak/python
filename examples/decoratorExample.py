@@ -18,6 +18,7 @@ def calculate_time(func):
         # storing time after function execution
         end = time.time()
         print("Total time taken in : ", func.__name__, end - begin)
+        print("Done!!")
 
     return inner1
 
