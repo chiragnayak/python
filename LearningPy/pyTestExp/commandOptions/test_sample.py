@@ -1,8 +1,9 @@
 
 
-def test_answer(cmdopt):
-    if cmdopt == "type1":
+def test_answer(testDirPath):
+    if testDirPath == "type1":
         print("first")
-    elif cmdopt == "type2":
+    elif testDirPath == "type2":
         print("second")
-    assert 0  # to see what was printed
+
+
