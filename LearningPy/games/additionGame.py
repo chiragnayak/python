@@ -18,17 +18,18 @@ while again == 'y':
         while okInput:
             try:
                 c = input(str(a) + " + " + str(b) + " = ")
-                okInput = False
+
+                ans = a + b
+                if ans == int(c):
+                    print("OK, CORRECT !!")
+                    correct = correct + 1
+                    okInput = False
+                else:
+                    print("WRONG!!")
+                    wrong = wrong + 1
+                    okInput = False
             except:
                 print("ERROR !..Please enter valid answer")
-
-        ans = a + b
-        if ans == int(c):
-            print("OK, CORRECT !!")
-            correct = correct + 1
-        else:
-            print("WRONG!!")
-            wrong = wrong + 1
 
     print("")
     print("SAANVI, YOU ANSWERED !!")
