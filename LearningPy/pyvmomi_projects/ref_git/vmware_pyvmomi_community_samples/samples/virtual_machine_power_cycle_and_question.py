@@ -26,6 +26,8 @@ import sys
 import textwrap
 import time
 
+import vm as vm
+from pip._vendor.distlib.compat import raw_input
 from pyVim import connect
 from pyVmomi import vim
 
@@ -92,7 +94,7 @@ def spinner(label=''):
 
 
 def answer_vm_question(virtual_machine):
-    print "\n"
+    print("\n")
     choices = virtual_machine.runtime.question.choice.choiceInfo
     default_option = None
     if virtual_machine.runtime.question.choice.defaultIndex is not None:
@@ -100,16 +102,16 @@ def answer_vm_question(virtual_machine):
         default_option = choices[ii]
     choice = None
     while choice not in [o.key for o in choices]:
-        print "VM power on is paused by this question:\n\n"
-        print "\n".join(textwrap.wrap(
-            virtual_machine.runtime.question.text, 60))
+        print("VM power on is paused by this question:\n\n")
+        print("\n".join(textwrap.wrap(
+            virtual_machine.runtime.question.text, 60)))
         for option in choices:
-            print "\t %s: %s " % (option.key, option.label)
+            print("\t %s: %s " % (option.key, option.label))
         if default_option is not None:
-            print "default (%s): %s\n" % (default_option.label,
-                                          default_option.key)
+            print("default (%s): %s\n" % (default_option.label,
+                                          default_option.key))
         choice = raw_input("\nchoice number: ").strip()
-        print "..."
+        print("...")
     return choice
 
 
@@ -136,20 +138,20 @@ while entity_stack:
         entity_stack.append(entity.vmFolder)
 
 if not isinstance(vm, vim.VirtualMachine):
-    print "could not find a virtual machine with the name %s" % args.name
+    print("could not find a virtual machine with the name %s" % args.name)
     sys.exit(-1)
 
-print "Found VirtualMachine: %s Name: %s" % (vm, vm.name)
+print("Found VirtualMachine: %s Name: %s" % (vm, vm.name))
 
 if vm.runtime.powerState == vim.VirtualMachinePowerState.poweredOn:
     # using time.sleep we just wait until the power off action
     # is complete. Nothing fancy here.
-    print "powering off..."
+    print("powering off...")
     task = vm.PowerOff()
     while task.info.state not in [vim.TaskInfo.State.success,
                                   vim.TaskInfo.State.error]:
         time.sleep(1)
-    print "power is off."
+    print("power is off.")
 
 
 # Sometimes we don't want a task to block execution completely
@@ -157,7 +159,7 @@ if vm.runtime.powerState == vim.VirtualMachinePowerState.poweredOn:
 # poll our task repeatedly and also check for any run-time issues. This
 # code deals with a common problem, what to do if a VM question pops up
 # and how do you handle it in the API?
-print "powering on VM %s" % vm.name
+print("powering on VM %s" % vm.name)
 if vm.runtime.powerState != vim.VirtualMachinePowerState.poweredOn:
 
     # now we get to work... calling the vSphere API generates a task...
@@ -183,11 +185,11 @@ if vm.runtime.powerState != vim.VirtualMachinePowerState.poweredOn:
 
     if task.info.state == vim.TaskInfo.State.error:
         # some vSphere errors only come with their class and no other message
-        print "error type: %s" % task.info.error.__class__.__name__
-        print "found cause: %s" % task.info.error.faultCause
+        print("error type: %s" % task.info.error.__class__.__name__)
+        print("found cause: %s" % task.info.error.faultCause)
         for fault_msg in task.info.error.faultMessage:
-            print fault_msg.key
-            print fault_msg.message
+            print(fault_msg.key)
+            print(fault_msg.message)
         sys.exit(-1)
 
 print

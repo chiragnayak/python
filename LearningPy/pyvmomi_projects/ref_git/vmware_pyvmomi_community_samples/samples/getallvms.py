@@ -17,7 +17,7 @@
 """
 Python program for listing the vms on an ESX / vCenter host
 """
-
+import argparse
 import re
 import atexit
 
@@ -25,18 +25,22 @@ from pyVim import connect
 from pyVmomi import vmodl
 from pyVmomi import vim
 
-import tools.cli as cli
-
 
 def get_args():
-    parser = cli.build_arg_parser()
+    parser = argparse.ArgumentParser(description="get all VMs")
     parser.add_argument('-f', '--find',
                         required=False,
                         action='store',
-                        help='String to match VM names')
+                        help='String to match VM names',
+                        default="Ubuntu_Prod_02_cnayak")
+    parser.add_argument('--host', default='10.79.65.101')
+    parser.add_argument('--user', default='userchi@vsphere.local')
+    parser.add_argument('--password', default='Admin!23Admin!23')
+    parser.add_argument('--port', default='443')
+    parser.add_argument('--disable_ssl_verification', default=True)
     args = parser.parse_args()
 
-    return cli.prompt_for_password(args)
+    return args
 
 
 def print_vm_info(virtual_machine):

@@ -15,7 +15,6 @@
 import argparse
 
 from pyVmomi import vim
-from tools import cli
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 import atexit
 import sys
@@ -66,7 +65,7 @@ def main():
     # create a list of vim.VirtualMachine objects so
     # that we can query them for statistics
     container = content.rootFolder
-    viewType = [vim.VirtualMachine]
+    viewType = [vim.HostSystem]
     recursive = True
 
     containerView = content.viewManager.CreateContainerView(container,
@@ -96,9 +95,9 @@ def main():
         result = perfManager.QueryStats(querySpec=[spec])
 
         # Loop through the results and print the output
-        output = ""
+        perf_data = dict()
         for r in result:
-            output += "name:        " + child.summary.config.name + "\n"
+            perf_data["name"] = child.summary.config.name
             for val in result[0].value:
                 # python3
                 if sys.version_info[0] > 2:
@@ -109,13 +108,10 @@ def main():
                     counterinfo_k_to_v = counterInfo.keys()[
                         counterInfo.values().index(val.id.counterId)]
                 if val.id.instance == '':
-                    output += "%s: %s\n" % (
-                        counterinfo_k_to_v, str(val.value[0]))
+                    perf_data[counterinfo_k_to_v] = {"value": str(val.value[0])}
                 else:
-                    output += "%s (%s): %s\n" % (
-                        counterinfo_k_to_v, val.id.instance, str(val.value[0]))
-
-        print(output)
+                    perf_data[counterinfo_k_to_v] = {"value" : str(val.value[0]), "instance" :val.id.instance}
+        print(perf_data)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ django==1.11.21
 djangorestframework==3.9.4
 djangosecure==0.0.11
 eventlet==0.25.0
-functools32==3.2.3.post2
+
 jira==2.0.0
 jsonpickle==1.1
 kubernetes==9.0.0

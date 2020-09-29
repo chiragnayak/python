@@ -12,6 +12,7 @@
  Requirements:
      VM tools must be installed on all virtual machines.
 """
+import argparse
 
 from pyVmomi import vim
 from tools import cli
@@ -22,7 +23,18 @@ import sys
 
 def main():
 
-    args = cli.get_args()
+    parser = argparse.ArgumentParser(description="get all VMs")
+    parser.add_argument('-f', '--find',
+                        required=False,
+                        action='store',
+                        help='String to match VM names',
+                        default="Ubuntu_Prod_02_cnayak")
+    parser.add_argument('--host', default='10.79.65.101')
+    parser.add_argument('--user', default='userchi@vsphere.local')
+    parser.add_argument('--password', default='Admin!23Admin!23')
+    parser.add_argument('--port', default='443')
+    parser.add_argument('--disable_ssl_verification', default=True)
+    args = parser.parse_args()
 
     # Connect to the host without SSL signing
     try:
