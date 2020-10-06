@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-"""
-Written by Chris Hupman
-Github: https://github.com/chupman/
-Example: Get guest info with folder and host placement
-
-"""
 from __future__ import print_function
 
 import time
@@ -20,6 +14,7 @@ import getpass
 import json
 
 from LearningPy.pyvmomi_projects.ref_git.vmware_pyvmomi_community_samples.my_code import global_config
+from LearningPy.pyvmomi_projects.ref_git.vmware_pyvmomi_community_samples.my_code.retry import retry
 
 data = {}
 
@@ -36,7 +31,7 @@ def GetArgs():
     parser.add_argument('--password', default='Admin!23Admin!23')
     parser.add_argument('--port', default='443')
     parser.add_argument('--disable_ssl_verification', default=True)
-    parser.add_argument('--host_ip_to_restart', default="10.79.65.109")
+    parser.add_argument('--host_ip_to_restart', default="10.79.65.108")
     args = parser.parse_args()
     return args
 
@@ -121,51 +116,53 @@ def main():
     # atexit.register(Disconnect, si) # throws exception not sure why
     logging.info("Retrieving Content..")
     content = si.RetrieveContent()
-    children = content.rootFolder.childEntity
-    for child in children:  # Iterate though DataCenters
-        dc = child
-        data[dc.name] = {}  # Add data Centers to data dict
-        clusters = dc.hostFolder.childEntity
-        for cluster in clusters:  # Iterate through the clusters in the DC
-            # Add Clusters to data dict
-            data[dc.name][cluster.name] = {}
-            hosts = cluster.host  # Variable to make pep8 compliance
-            for host in hosts:  # Iterate through Hosts in the Cluster
-                hostname = host.summary.config.name
-                if hostname != args.host_ip_to_restart:
-                    continue
-                # Add VMs to data dict by config name
-                data[dc.name][cluster.name][hostname] = {}
-                all_vms = host.vm
+    container = content.rootFolder  # starting point to look into
+    viewType = [vim.HostSystem]
+    recursive = True
 
-                vms = [m for m in all_vms if m.runtime.powerState == "poweredOn"]
+    containerView = content.viewManager.CreateContainerView(container,
+                                                            viewType,
+                                                            recursive)
+    children = containerView.view
+    for host in children:  # Iterate through Hosts in the Cluster
+        hostname = host.summary.config.name
+        if hostname != args.host_ip_to_restart:
+            continue
 
-                if len(vms) == 0:
-                    break
+        all_vms = host.vm
 
-                # for vm in vms:  # Iterate through each VM on the host
-                #     vmname = vm.summary.config.name
-                #     data[dc.name][cluster.name][hostname][vmname] = {}
-                #     summary = vmsummary(vm.summary, vm.guest)
-                #     vm2dict(dc.name, cluster.name, hostname, vm, summary)
+        vms = [m for m in all_vms if m.runtime.powerState == "poweredOn"]
+        vms_ips = [m.name for m in all_vms if m.runtime.powerState == "poweredOn"]
 
-                logging.info("Powering Off all VMs on host {}".format(host.name))
-                for vm in vms:  # Iterate through each VM on the host
-                    power_down(vm)
+        logging.info("VMs IN POWERED ON state {} ".format(vms_ips))
 
-                host_enter_maintenance_mode(host)
-                host_reboot(host)
-                host_exit_maintenance_mode(host)
+        if len(vms) == 0:
+            break
 
-                logging.info("Powering ON all VMs on host {}".format(host.name))
-                for vm in vms:  # Iterate through each VM on the host
-                    power_up(vm)
+        # for vm in vms:  # Iterate through each VM on the host
+        #     vmname = vm.summary.config.name
+        #     data[dc.name][cluster.name][hostname][vmname] = {}
+        #     summary = vmsummary(vm.summary, vm.guest)
+        #     vm2dict(dc.name, cluster.name, hostname, vm, summary)
+
+        logging.info("Powering Off all VMs on host {}".format(host.name))
+        for vm in vms:  # Iterate through each VM on the host
+            power_down(vm)
+
+        host_enter_maintenance_mode(host)
+        host_reboot(host)
+        host_exit_maintenance_mode(host)
+
+        logging.info("Powering ON all VMs on host {}".format(host.name))
+        for vm in vms:  # Iterate through each VM on the host
+            power_up(vm)
 
     # print(json.dumps(data, sort_keys=True, indent=4))
     #
     # data2json(data, args)
 
 
+@retry(tries=10)
 def host_reboot(host):
     if host.runtime.inMaintenanceMode:
         logging.info("Rebooting host %s" % (host.name))
@@ -181,13 +178,14 @@ def host_reboot(host):
         while host.runtime.connectionState != "connected":
             logging.info("Waiting for host to come up. Current Host state is [%s] " % host.runtime.connectionState)
             time.sleep(10)
-
+        time.sleep(15)
         if task.info.state is vim.TaskInfo.State.error:
             raise Exception("Could not perform Reboot task on host  %s " % (host.name))
     else:
         logging.error("Host %s is NOT in Maintenance Mode state, Cannot Do Restart!" % host.name)
 
 
+@retry(tries=10)
 def host_exit_maintenance_mode(host):
     if host.runtime.inMaintenanceMode:
         logging.info("Switching to Exit Maintenance Mode for host %s" % (host.name))
@@ -195,12 +193,14 @@ def host_exit_maintenance_mode(host):
         while task.info.state not in [vim.TaskInfo.State.success, vim.TaskInfo.State.error]:
             time.sleep(10)
             logging.info("Exit Maintenance task state is %s " % task.info.state)
+        time.sleep(15)
         if task.info.state is vim.TaskInfo.State.error:
             raise Exception("Could not perform Exit maintenance mode task on host  %s " % (host.name))
     else:
         logging.error("Host %s is already NOT in Maintenance Mode state!" % host.name)
 
 
+@retry(tries=10)
 def host_enter_maintenance_mode(host):
     if not host.runtime.inMaintenanceMode:
         logging.info("Enter Maintenance Mode for host %s" % host.name)
@@ -214,6 +214,7 @@ def host_enter_maintenance_mode(host):
         logging.error("Host %s is already in Maintenance Mode state!" % host.name)
 
 
+@retry(tries=10)
 def power_up(vm):
     if vm.runtime.powerState != vim.VirtualMachinePowerState.poweredOn:
         logging.info("Powering on VM %s" % (vm.name))
@@ -227,6 +228,7 @@ def power_up(vm):
         logging.error("VM %s is already in PowerOn state!" % vm.name)
 
 
+@retry(tries=10)
 def power_down(vm):
     if vm.runtime.powerState == vim.VirtualMachinePowerState.poweredOn:
         logging.info("Powering Off VM %s" % (vm.name))
@@ -243,4 +245,10 @@ def power_down(vm):
 
 # Start program
 if __name__ == "__main__":
-    main()
+    x = None
+    y = "sim_nayak"
+    if not x or "sim" not in y:
+        print("its working now")
+    else:
+        print("Test should run")
+    # main()

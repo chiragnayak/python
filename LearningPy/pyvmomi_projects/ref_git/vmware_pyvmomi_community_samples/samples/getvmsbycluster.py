@@ -7,8 +7,6 @@ Example: Get guest info with folder and host placement
 """
 from __future__ import print_function
 
-from pyVmomi import vim
-
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 
 import argparse

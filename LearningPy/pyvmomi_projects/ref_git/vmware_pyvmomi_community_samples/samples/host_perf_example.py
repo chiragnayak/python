@@ -75,6 +75,8 @@ def main():
 
     # Loop through all the VMs
     for child in children:
+        host = child
+        print("ASSIGNED CPU ALLOCATION USAGE {}".format(host.systemResources.config.cpuAllocation))
         # Get all available metric IDs for this VM
         counterIDs = [m.counterId for m in
                       perfManager.QueryAvailablePerfMetric(entity=child)]

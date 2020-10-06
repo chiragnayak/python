@@ -21,8 +21,6 @@ from pyVmomi import vmodl
 from pyVmomi import vim
 import argparse
 import atexit
-import urllib2
-import urlparse
 import base64
 
 
@@ -102,7 +100,7 @@ def find_vmx(dsbrowser, dsname, datacenter, fulldsname):
                 vmxurl = "https://%s/folder/%s%s?dcPath=%s&dsName=%s" % \
                          (args.host, vmfold, dsfile, datacenter, fulldsname)
                 VMX_PATH.append(vmxurl)
-            except Exception, e:
+            except Exception as e:
                 print "Caught exception : " + str(e)
                 return -1
 
@@ -148,7 +146,7 @@ def examine_vmx(dsname):
             tempds_vm = [newdn, dspath]
             DS_VM[uuid] = tempds_vm
 
-    except Exception, e:
+    except Exception as e:
         print "Caught exception : " + str(e)
 
 
@@ -180,7 +178,7 @@ def getvm_info(vm, depth=1):
         uuid = vm.config.instanceUuid
         uuid = uuid.replace("-", "")
         INV_VM.append(uuid)
-    except Exception, e:
+    except Exception as e:
         print "Caught exception : " + str(e)
         return -1
 
@@ -212,7 +210,7 @@ def main():
                               user=args.user,
                               pwd=args.password,
                               port=int(args.port))
-        except IOError, e:
+        except IOError as e:
             pass
 
         if not si:
@@ -260,10 +258,10 @@ def main():
         for match in dsvmkey:
             find_match(match)
         Disconnect(si)
-    except vmodl.MethodFault, e:
+    except vmodl.MethodFault as e:
         print "Caught vmodl fault : " + e.msg
         return -1
-    except Exception, e:
+    except Exception as e:
         print "Caught exception : " + str(e)
         return -1
 
