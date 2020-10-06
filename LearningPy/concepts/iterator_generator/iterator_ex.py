@@ -10,8 +10,10 @@ pp(next(iterator_obj))
 pp(next(iterator_obj))
 pp(next(iterator_obj))
 
-# should throw StopIteration
-# pp(next(iterator_obj))
+'''
+should throw StopIteration
+pp(next(iterator_obj))
+'''
 
 # Iteration Protocol
 def get_data(iterable):

@@ -20,8 +20,16 @@ def distinct(iterable):
 
 
 def run_pipeline():
-    list = [3, 6, 6, 2, 1, 4, 4]
-    for item in take(3, distinct(list)):
+    list_input = [3, 6, 6, 2, 1, 4, 4]
+    for item in take(3, distinct(list_input)):
+        pp(item)
+
+    '''
+    simplified:
+    here the distinct() will collect all the values in list first, via its yield calls
+    thereafter take() will be called with values
+    '''
+    for item in take(3, list(distinct(list_input))):
         pp(item)
 
 

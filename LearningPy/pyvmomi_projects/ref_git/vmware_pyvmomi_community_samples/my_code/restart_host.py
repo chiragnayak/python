@@ -26,7 +26,7 @@ def GetArgs():
     Supports the command-line arguments listed below.
     """
     parser = argparse.ArgumentParser(description="get all hosts and their respective VMs")
-    parser.add_argument('--host', default='10.79.65.101')
+    parser.add_argument('--vcip', default='10.79.65.101')
     parser.add_argument('--user', default='userchi@vsphere.local')
     parser.add_argument('--password', default='Admin!23Admin!23')
     parser.add_argument('--port', default='443')
@@ -55,48 +55,11 @@ def getNICs(summary, guest):
     return nics
 
 
-def vmsummary(summary, guest):
-    vmsum = {}
-    config = summary.config
-    net = getNICs(summary, guest)
-    vmsum['mem'] = str(config.memorySizeMB / 1024)
-    vmsum['diskGB'] = str("%.2f" % (summary.storage.committed / 1024 ** 3))
-    vmsum['cpu'] = str(config.numCpu)
-    vmsum['path'] = config.vmPathName
-    vmsum['ostype'] = config.guestFullName
-    vmsum['state'] = summary.runtime.powerState
-    vmsum['annotation'] = config.annotation if config.annotation else ''
-    vmsum['net'] = net
-
-    return vmsum
-
-
-def vm2dict(dc, cluster, host, vm, summary):
-    # If nested folder path is required, split into a separate function
-    vmname = vm.summary.config.name
-    data[dc][cluster][host][vmname]['folder'] = vm.parent.name
-    data[dc][cluster][host][vmname]['mem'] = summary['mem']
-    data[dc][cluster][host][vmname]['diskGB'] = summary['diskGB']
-    data[dc][cluster][host][vmname]['cpu'] = summary['cpu']
-    data[dc][cluster][host][vmname]['path'] = summary['path']
-    data[dc][cluster][host][vmname]['net'] = summary['net']
-    data[dc][cluster][host][vmname]['ostype'] = summary['ostype']
-    data[dc][cluster][host][vmname]['state'] = summary['state']
-    data[dc][cluster][host][vmname]['annotation'] = summary['annotation']
-    print(data[dc][cluster][host][vmname])
-
-
-def data2json(data, args):
-    with open("json_data.json.json", 'w') as f:
-        json.dump(data, f)
-
-
 def main():
     """
     Iterate through all datacenters and list VM info.
     """
     args = GetArgs()
-    outputjson = True
     logging.info("Connecting VC..")
     if args.password:
         password = args.password
@@ -104,7 +67,7 @@ def main():
         password = getpass.getpass(prompt='Enter password for host %s and '
                                           'user %s: ' % (args.host, args.user))
 
-    si = SmartConnectNoSSL(host=args.host,
+    si = SmartConnectNoSSL(host=args.vcip,
                            user=args.user,
                            pwd=password,
                            port=int(args.port))
@@ -139,12 +102,6 @@ def main():
         if len(vms) == 0:
             break
 
-        # for vm in vms:  # Iterate through each VM on the host
-        #     vmname = vm.summary.config.name
-        #     data[dc.name][cluster.name][hostname][vmname] = {}
-        #     summary = vmsummary(vm.summary, vm.guest)
-        #     vm2dict(dc.name, cluster.name, hostname, vm, summary)
-
         logging.info("Powering Off all VMs on host {}".format(host.name))
         for vm in vms:  # Iterate through each VM on the host
             power_down(vm)
@@ -156,10 +113,6 @@ def main():
         logging.info("Powering ON all VMs on host {}".format(host.name))
         for vm in vms:  # Iterate through each VM on the host
             power_up(vm)
-
-    # print(json.dumps(data, sort_keys=True, indent=4))
-    #
-    # data2json(data, args)
 
 
 @retry(tries=10)
@@ -245,10 +198,4 @@ def power_down(vm):
 
 # Start program
 if __name__ == "__main__":
-    x = None
-    y = "sim_nayak"
-    if not x or "sim" not in y:
-        print("its working now")
-    else:
-        print("Test should run")
-    # main()
+    main()

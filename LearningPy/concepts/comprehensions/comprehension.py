@@ -3,26 +3,26 @@ from pprint import pprint as pp
 text = "Kindle the light of knowledge and love"
 data = text.split(" ")
 
-# list comprehension : [expr(x) for x in iterable]
-# iterable can be any object that is iterable like : list, tuple.
-# resulting object is list
+'''list comprehension : [expr(x) for x in iterable]
+iterable can be any object that is iterable like : list, tuple.
+resulting object is list'''
 word_len = [len(x) for x in data]
 print(word_len)
 
-# set comprehension : {expr(x) for x in iterable}
-# iterable can be any object that is iterable like : list, tuple.
-# result is set (i.e. duplicates removed)
+'''set comprehension : {expr(x) for x in iterable}
+iterable can be any object that is iterable like : list, tuple.
+result is set (i.e. duplicates removed)'''
 word_len = {len(x) for x in data}
 print(word_len)
 
-# dictionary comprehension :
-# {
-#     key_expr(item) : value_expr(item)
-#     for item in iterable
-# }
-# result is a dictionary
-# Ex usage : to invert a dictionary to perform reverse lookups.
-# basically to make values from previous dict as keys in new dict.
+'''dictionary comprehension :
+{
+    key_expr(item) : value_expr(item)
+    for item in iterable
+}
+result is a dictionary
+Ex usage : to invert a dictionary to perform reverse lookups.
+basically to make values from previous dict as keys in new dict.'''
 country_to_capital = {"India": "New Delhi",
                       "China": "Beijing",
                       "USA": "Washington D.C.",

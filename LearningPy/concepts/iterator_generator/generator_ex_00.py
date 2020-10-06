@@ -1,14 +1,22 @@
-# "Generators" are defined by any Python function/def that has used yield atleast once.
+'''
+"Generators" are defined by any Python function/def that has used yield atleast once.
+
+Simply speaking, a generator is a function that returns an object (iterator)
+which we can iterate over (one value at a time).
+
+- Generators are single use objects
+- To re-create a generator from a generator expression (see generator_expression), you must execute teh expression again
+'''
 import random
 from pprint import pprint as pp
 
 
-# Infinite Stream
+# Infinite Stream of even numbers
 def demo_even_number_generator():
-    # if you remove "while" condition, only one value will be yielded. i.e. for first succesfull if even number comes
-    # of StopIteration if odd number comes.
-    # next call will, throw StopIteration Exception.
-    # to keep the value yielded, we need this infinite while loop
+    '''if you remove "while" condition, only one value will be yielded. i.e. for first succesfull if even number comes
+    of StopIteration if odd number comes.
+    in case, even is generated in first call, next call will, throw StopIteration Exception.
+    to keep the value yielded, we need this infinite while loop'''
     while True:
         num = random.randint(1, 100)
         if num % 2 == 0:
@@ -17,6 +25,7 @@ def demo_even_number_generator():
 
 generator_obj = demo_even_number_generator()
 pp(generator_obj)
+pp(next(generator_obj))
 pp(next(generator_obj))
 pp(next(generator_obj))
 pp(next(generator_obj))
@@ -56,7 +65,7 @@ for x in get123():
 
 for x in get123():
     print(x)
-    # You can put as many statements till the loop is complete. Generator will be called
-    # first in start (before entering the for loop) and then only when the loop iteration is complete.
-    # As per programming flow. :)
+    '''You can put as many statements till the loop is complete. Generator will be called
+    first in start (before entering the for loop) and then only when the loop iteration is complete.
+    As per programming flow. :)'''
     print("This is {}. ".format(x))
