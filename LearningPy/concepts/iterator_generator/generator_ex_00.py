@@ -4,6 +4,7 @@
 Simply speaking, a generator is a function that returns an object (iterator)
 which we can iterate over (one value at a time).
 
+- Generators are iterators
 - Generators are single use objects
 - To re-create a generator from a generator expression (see generator_expression), you must execute teh expression again
 '''

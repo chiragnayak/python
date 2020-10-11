@@ -1,5 +1,6 @@
 '''
-Syntax: similar to list comprehension, insted of square brackets [], parenthesis are used ()
+Syntax: Generators are type of comprehension that generates generator object.
+Syntax is similar to list comprehension, instead of square brackets [], parenthesis are used ()
 (expr(item) for item in iterable)
 
 where needed : where you need,
@@ -12,6 +13,7 @@ Note:
 - To re-create a generator-object from a generator-expression, you must execute the expression again
 - once it is used, it will not yield in the next call. See below &&&
 '''
+from LearningPy.concepts import util
 
 '''
 Task: to generate squares of 1 million numbers.
@@ -46,17 +48,5 @@ print(list_of_last_ten)
 print(sum(x * x for x in range(1, 10000001)))
 
 
-def is_even(num):
-    """
-    Predicate Function
-    :param num:
-    :return:
-    """
-    if num % 2 == 0:
-        return True
-    else:
-        return False
-
-
 ''' Sum of even numbers in first 1000 numbers '''
-print(sum(x for x in range(1000) if is_even(x)))
+print(sum(x for x in range(1000) if util.is_even(x)))

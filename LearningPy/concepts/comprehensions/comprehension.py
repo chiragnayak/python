@@ -1,5 +1,13 @@
 from pprint import pprint as pp
 
+'''
+for list, set and dict
+input iterable and optional predicate
+
+iterable object is that can be iterated item by item
+
+'''
+
 text = "Kindle the light of knowledge and love"
 data = text.split(" ")
 

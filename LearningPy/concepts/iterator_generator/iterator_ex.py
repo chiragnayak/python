@@ -2,6 +2,10 @@ from pprint import pprint as pp
 
 iterable_list = [1, 2, 3, 4, 5]
 
+'''
+to get iterator from an iterable object use iter()
+Generators are iterators
+'''
 iterator_obj = iter(iterable_list)
 
 pp(next(iterator_obj))
