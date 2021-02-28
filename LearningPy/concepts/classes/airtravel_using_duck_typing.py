@@ -134,6 +134,8 @@ class Flight:
 #         return (range(1, self._num_rows+1),
 #                 "ABCDEFJHIJK"[:self.num_seats_pre_row])
 """
+Polymorphism is achieved using duck-typing. Also, called Late binding.
+
 Duck Typing Context:
 
 if a bird, swims like a duck, walks like duck and quacks like a duck, then i will call it a duck

@@ -1,0 +1,24 @@
+{% extends "base.html" %} <!-- This should be the first tag -->
+
+{% block title %}Welcome : Let's Meet ..{% endblock %}
+
+<!-- everything around body tag goes around block content-->
+
+{% block content %}
+    <h1> Welcome to Meeting Planner !!</h1>
+    <h3> What is a meeting ?</h3>
+
+    <br>
+    <p> A meeting is a gathering of two or more people that has been convened for the purpose of achieving a common goal through verbal interaction,
+        such as sharing information or reaching agreement.</p>
+
+    {{message}}
+
+    <h3>There are currently [ {{num_meetings}} ] meetings in the database.</h3>
+
+    <br>
+    <a href="{% url 'meetings_list' %}">All Meetings</a>
+    <br>
+    <a href="{% url 'rooms_list' %}">All Rooms</a>
+
+{% endblock %}

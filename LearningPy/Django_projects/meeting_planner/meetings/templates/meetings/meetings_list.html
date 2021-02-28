@@ -1,0 +1,31 @@
+{% extends "base.html" %} <!-- This should be the first tag -->
+
+{% block title %}All Meetings{% endblock %}
+
+<!-- everything around body tag goes around block content-->
+
+{% block content %}
+
+    <h3>There are currently [ {{num_meetings}} ] meetings in the database.</h3>
+    <p>via link binding</p>
+     <ul>
+         {% for meeting in meetings %}
+            <li>
+                <a href="{% url 'detail' meeting.id %}">
+                    {{ meeting.title }}
+                </a>
+            </li>
+         {% endfor %}
+     </ul>
+    <br>
+    <form action="{% url 'new_meeting' %}" method='GET'>
+        <button type='submit'>New Meeting..</button>
+    </form>
+    <br>
+    <a href="{% url 'rooms_list' %}">All Rooms</a>
+    <br>
+    <a href="{% url 'welcome_page' %}">
+        HOME
+    </a>
+
+{% endblock %}

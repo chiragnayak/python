@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Room Detail{% endblock %}
+
+<!-- everything around body tag goes around block content-->
+
+{% block content %}
+
+<p>
+    Room Name : {{ room.room_name }}<br>
+    Floor #   : {{ room.floor_num }}<br>
+    Room #    : {{ room.room_num }}<br></p>
+
+<a href="{% url 'welcome_page' %}">
+    HOME
+</a>
+<br>
+<a href="{% url 'rooms_list' %}">
+    ALL ROOMS
+</a>
+
+{% endblock %}

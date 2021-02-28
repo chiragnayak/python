@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}All Rooms{% endblock %}
+
+<!-- everything around body tag goes around block content-->
+
+{% block content %}
+<p>via link binding, All rooms in database</p>
+ <ul>
+     {% for room in all_rooms %}
+        <li>
+            <a href="{% url 'room_detail' room.id %}">
+                {{ room.room_name }}
+            </a>
+        </li>
+     {% endfor %}
+ </ul>
+
+<a href="{% url 'welcome_page' %}">
+    HOME
+</a>
+
+{% endblock %}

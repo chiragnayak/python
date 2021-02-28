@@ -17,7 +17,7 @@
 Python port of William Lam's generateHTML5VMConsole.pl
 Also ported SHA fingerprint fetching to Python OpenSSL library
 """
-
+import argparse
 import atexit
 import OpenSSL
 import ssl
@@ -50,17 +50,18 @@ def get_vm(content, name):
 
 def get_args():
     """
-    Add VM name to args
+    Supports the command-line arguments listed below.
     """
-    parser = cli.build_arg_parser()
-
-    parser.add_argument('-n', '--name',
-                        required=True,
-                        help='Name of Virtual Machine.')
-
+    parser = argparse.ArgumentParser(description="get all hosts and their respective VMs")
+    parser.add_argument('--vcip', default='10.79.65.101')
+    parser.add_argument('--user', default='userchi@vsphere.local')
+    parser.add_argument('--password', default='Admin!23Admin!23')
+    parser.add_argument('--port', default='443')
+    parser.add_argument('--disable_ssl_verification', default=True)
+    parser.add_argument('--server_vm', default="10.79.65.108")
+    parser.add_argument('--client_vms', default="10.79.65.108")
     args = parser.parse_args()
-
-    return cli.prompt_for_password(args)
+    return args
 
 
 def main():
@@ -72,7 +73,7 @@ def main():
     args = get_args()
 
     try:
-        si = SmartConnect(host=args.host,
+        si = SmartConnect(host=args.vcip,
                           user=args.user,
                           pwd=args.password,
                           port=int(args.port))
