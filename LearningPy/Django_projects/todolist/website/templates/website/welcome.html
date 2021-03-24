@@ -1,0 +1,36 @@
+{% extends "base.html" %} <!-- This should be the first tag -->
+
+{% block title %}Welcome : Let's Meet ..{% endblock %}
+
+<!-- everything around body tag goes around block content-->
+
+{% block content %}
+    <h1> Welcome to your To Do List !!</h1>
+
+    <h3>There are currently [ {{num_tasks}} ] tasks in the your TODO list.</h3>
+     <table>
+         <tr>
+            <th>Open Tasks</th>
+            <th>Schedule</th>
+          </tr>
+         {% for task in tasks %}
+         <tr>
+            <td>
+                <a href="{% url 'task_detail' task.id %}">
+                    {{ task.name }}
+                </a>
+            </td>
+            <td>
+                {{ task.start_date|date:"M d, Y" }}, {{ task.start_time }}
+            </td>
+          </tr>
+         {% endfor %}
+     </table>
+    <br>
+
+    <form action="{% url 'new_task' %}" method='GET'>
+        <button type='submit'>New task...</button>
+    </form>
+    <br>
+
+{% endblock %}

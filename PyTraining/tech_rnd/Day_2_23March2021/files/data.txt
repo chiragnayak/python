@@ -1,0 +1,6 @@
+Python Scripting
+is so much
+efficient
+It is developed
+by Guido Van Rossum
+in early 1990s

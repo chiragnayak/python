@@ -4,10 +4,7 @@
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.contrib import admin
-from django.urls import path
 
-from . import views
 from .views import meeting_detail, room_detail, rooms_list, new_meeting, meetings_list
 
 """

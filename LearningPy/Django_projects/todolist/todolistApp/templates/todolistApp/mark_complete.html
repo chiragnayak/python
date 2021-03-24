@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} Meeting: {{meeting.title}} {% endblock %}
+
+<!-- everything around body tag goes around block content-->
+
+{% block content %}
+<h1>{{task.title}}</h1>
+<h2>Description</h2>
+<p>{{task.description}}</p>
+<h2>Details</h2>
+<p><strong>Start Date: </strong> {{task.start_date}}</p>
+<p><strong>Start Time: </strong> {{task.start_time}}</p>
+<p><strong>End Date  : </strong> {{task.end_date}}</p>
+<p><strong>Duration Planned : {{task.duration}}</p>
+<p><strong>Is Complete : </strong> {{task.complete}}</p>
+
+<a href="{% url 'welcome_page' %}">
+    HOME
+</a>
+{% endblock %}}
