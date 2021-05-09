@@ -3,7 +3,6 @@ import json
 import smtplib
 import requests
 
-
 CITIES = ["363"]
 DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
 AGE = 18
