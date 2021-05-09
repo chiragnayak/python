@@ -97,10 +97,10 @@ if __name__ == "__main__":
             available = False
 
     if NO_SLOT_AT_ALL:
-        send_email("Subject: {} NO VACCINE SLOTS AVAILABLE"
+        send_email("Subject: CITY | {} | AGE {} | NO VACCINE SLOTS AVAILABLE"
                    "\n"
                    "\n"
-                   "{}".format(TODAYS_DATE, CITIES))
+                   "{}".format(TODAYS_DATE, AGE, CITIES))
 
 
 

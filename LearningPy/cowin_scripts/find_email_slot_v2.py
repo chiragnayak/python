@@ -4,7 +4,7 @@ import smtplib
 import requests
 
 
-PINCODES = ["411017", "411026", "411033", "411027", "411038", "411044", "412115"]
+PINCODES = ["411017", "411026", "411033", "411027", "411038", "411044", "412115", "793103"]
 DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
 AGE = 18
 
@@ -68,9 +68,9 @@ if __name__ == "__main__":
             for centre in response["centers"]:
                 NO_SLOT_CENTER = True
                 centre_text = list()
-                centre_text.append("="*20)
+                centre_text.append("="*40)
                 centre_text.append("CENTRE NAME : {}".format(str(centre["name"])))
-                centre_text.append("=" * 20)
+                centre_text.append("=" * 40)
                 centre_text.append("ADDRESS: {}".format(centre["address"]))
                 centre_text.append("PIN: {}".format(str(centre["pincode"])))
                 x = "\n".join(centre_text)
@@ -80,9 +80,9 @@ if __name__ == "__main__":
                     slots_available = session["available_capacity"]
                     if session["date"] in DATES and age_limit == str(AGE) and slots_available > 1:
                         session_text = list()
-                        session_text.append("===" * 10)
+                        session_text.append("-" * 25)
                         session_text.append("SLOT AVAILABLE")
-                        session_text.append("===" * 10)
+                        session_text.append("-" * 25)
                         session_text.append("ON DATE : {}".format(session["date"]))
                         session_text.append("AVAILABLE : {}".format(str(session["available_capacity"])))
                         session_text.append(str(session["vaccine"]))
@@ -104,10 +104,10 @@ if __name__ == "__main__":
             available = False
 
     if NO_SLOT_AT_ALL:
-        send_email("Subject: {} NO VACCINE SLOTS AVAILABLE"
+        send_email("Subject: PIN | {} | AGE {} | NO VACCINE SLOTS AVAILABLE"
                    "\n"
                    "\n"
-                   "{}".format(TODAYS_DATE, PINCODES))
+                   "{}".format(TODAYS_DATE, AGE, PINCODES))
 
 
 
