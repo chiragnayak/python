@@ -11,7 +11,7 @@ AGE = 18
 def send_email(message_to_send=None):
     smtp_server = "smtp.vmware.com"
     port = 25  # For starttls
-    sender_email = "no_reply_pycowin@vmware.com"
+    sender_email = "no_reply_vac@vmware.com"
     receiver_email = "cnayak@vmware.com"
 
     # Try to log in to server and send email
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     for date in DATES:
         for city in CITIES:
             city_message = list()
-            display = "FOR CITY : {} ".format(city)
+            display = "FOR CITY : {} | {}".format(city, date)
             NO_SLOT_CITY = True
             city_message.append("\n\n")
             city_message.append("=" * 40)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
                         city_message.append("xxx NO SLOT AVAILABLE FOR THIS DATE xxx\n\n")
 
             if available:
-                city_message.insert(0, "Subject: AVAILABLE | AGE: {} | PIN : {}, BOOK NOW".format(AGE, city))
+                city_message.insert(0, "Subject: AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city))
                 x = "\n".join(city_message)
                 send_email(x)
                 available = False
