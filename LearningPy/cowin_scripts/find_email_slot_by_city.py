@@ -7,7 +7,7 @@ import sys, webbrowser
 CITIES = ["363"]
 DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
 AGE = 18
-receiver_emails = ["cnayak@vmware.com", "gtarun@vmware.com","diyewarr@vmware.com"]
+receiver_emails = ["cnayak@vmware.com", "gtarun@vmware.com", "diyewarr@vmware.com"]
 
 
 def send_email(message_to_send=None, receiver_emails=None):
@@ -99,7 +99,7 @@ if __name__ == "__main__":
                     if NO_SLOT_CITY:
                         message = "xxx NO SLOT AVAILABLE FOR {} Yr AT {} | PIN {} | {} xxx".format(AGE, str(session["name"]), str(session["pincode"]), date)
                         print(message)
-                        city_message.append(message)
+                        city_message.append(message, receiver_emails)
 
             if available:
                 city_message.insert(0, "Subject: AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city))
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     #                "{}"
     #                "\n"
     #                "\n"
-    #                "{}".format(TODAYS_DATE, AGE, CITIES, DATES))
+    #                "{}".format(TODAYS_DATE, AGE, CITIES, DATES), receiver_emails)
 
 
 
