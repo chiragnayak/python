@@ -80,6 +80,7 @@ if __name__ == "__main__":
                         session_text.append("CENTER NAME : {}".format(str(session["name"])))
                         session_text.append("ADDRESS : {}".format(str(session["address"])))
                         session_text.append("PINCODE : {}".format(str(session["pincode"])))
+                        session_text.append("DATE : {}".format(str(session["date"])))
                         session_text.append("AVAILABLE : {}".format(str(session["available_capacity"])))
                         session_text.append(str(session["vaccine"]))
                         session_text.append(str(session["slots"]))
