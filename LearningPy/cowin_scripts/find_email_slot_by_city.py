@@ -7,18 +7,19 @@ import sys, webbrowser
 CITIES = ["363"]
 DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
 AGE = 18
+receiver_emails = ["cnayak@vmware.com"]
 
 
-def send_email(message_to_send=None):
+def send_email(message_to_send=None, receiver_emails=None):
     smtp_server = "smtp.vmware.com"
     port = 25  # For starttls
     sender_email = "no_reply@vmware.com"
-    receiver_email = "cnayak@vmware.com"
 
     # Try to log in to server and send email
     try:
         server = smtplib.SMTP(smtp_server,port)
-        server.sendmail(sender_email, receiver_email, message_to_send)
+        for receiver in receiver_emails:
+            server.sendmail(sender_email, receiver, message_to_send)
         print("EMAIL SENT..")
     except Exception as e:
         print("EXCEPTION OCCURRED WHILE EMAIL PROCESSING!!")
@@ -102,7 +103,7 @@ if __name__ == "__main__":
             if available:
                 city_message.insert(0, "Subject: AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city))
                 x = "\n".join(city_message)
-                send_email(x)
+                send_email(x, receiver_emails)
                 available = False
 
     # if NO_SLOT_AT_ALL:
