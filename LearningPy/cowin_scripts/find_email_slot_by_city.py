@@ -96,7 +96,7 @@ if __name__ == "__main__":
                         city_message.append(x)
 
                     if NO_SLOT_CITY:
-                        message = "xxx NO SLOT AVAILABLE FOR {} | PIN {} | {} xxx".format(str(session["name"]), str(session["pincode"]), date)
+                        message = "xxx NO SLOT AVAILABLE FOR {} Yr AT {} | PIN {} | {} xxx".format(AGE, str(session["name"]), str(session["pincode"]), date)
                         print(message)
                         city_message.append(message)
 
