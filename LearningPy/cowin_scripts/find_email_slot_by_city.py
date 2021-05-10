@@ -89,8 +89,8 @@ if __name__ == "__main__":
                         session_text.append(str(session["slots"]))
 
                         #maps link
-                        session_text.append("https://www.google.com/maps/place/" + str(session["address"]))
-                        session_text.append("https://www.cowin.gov.in/home")
+                        session_text.append("\nGOOGLE MAPS   : https://www.google.com/maps/place/" + str(session["address"]))
+                        session_text.append("COWIN WEBSITE : https://www.cowin.gov.in/home")
                         session_text.append("\n" * 1)
 
                         available = True
