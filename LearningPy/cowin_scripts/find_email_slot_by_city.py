@@ -7,7 +7,7 @@ import sys, webbrowser
 CITIES = ["363"]
 DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
 AGE = 18
-receiver_emails = ["cnayak@vmware.com", "gtarun@vmware.com"]
+receiver_emails = ["cnayak@vmware.com", "gtarun@vmware.com","diyewarr@vmware.com"]
 
 
 def send_email(message_to_send=None, receiver_emails=None):
