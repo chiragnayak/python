@@ -15,12 +15,13 @@ RECEIVERS = ["cnayak@vmware.com", "gtarun@vmware.com", "diyewarr@vmware.com"]
 def send_email(message_to_send=None, emails_to_sent=None):
     smtp_server = "smtp.vmware.com"
     port = 25  # For starttls
-    sender_email = "no_reply@vmware.com"
+    sender_email = "no_reply_vac@vmware.com"
 
     # Try to log in to server and send email
     try:
         server = smtplib.SMTP(smtp_server,port)
         for receiver in emails_to_sent:
+            print("SENDING EMAIL TO : ", receiver)
             server.sendmail(sender_email, receiver, message_to_send)
         print("EMAIL SENT..")
     except Exception as e:
