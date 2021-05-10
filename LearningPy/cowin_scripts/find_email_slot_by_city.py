@@ -1,3 +1,4 @@
+import traceback
 from datetime import datetime, timedelta
 import json
 import smtplib
@@ -22,6 +23,8 @@ def send_email(message_to_send=None, receiver_emails=None):
             server.sendmail(sender_email, receiver, message_to_send)
         print("EMAIL SENT..")
     except Exception as e:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_exception(exc_type, exc_value, exc_traceback, file=sys.stdout)
         print("EXCEPTION OCCURRED WHILE EMAIL PROCESSING!!")
         print(e)
     finally:
