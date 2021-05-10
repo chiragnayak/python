@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import json
 import smtplib
 import requests
+import sys, webbrowser
 
 CITIES = ["363"]
 DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -11,15 +12,16 @@ AGE = 18
 def send_email(message_to_send=None):
     smtp_server = "smtp.vmware.com"
     port = 25  # For starttls
-    sender_email = "no_reply_vac@vmware.com"
+    sender_email = "no_reply@vmware.com"
     receiver_email = "cnayak@vmware.com"
 
     # Try to log in to server and send email
     try:
         server = smtplib.SMTP(smtp_server,port)
         server.sendmail(sender_email, receiver_email, message_to_send)
+        print("EMAIL SENT..")
     except Exception as e:
-        print("EXCEPTION OCCURED!!")
+        print("EXCEPTION OCCURRED WHILE EMAIL PROCESSING!!")
         print(e)
     finally:
         server.quit()
@@ -80,7 +82,12 @@ if __name__ == "__main__":
                         session_text.append("AVAILABLE : {}".format(str(session["available_capacity"])))
                         session_text.append(str(session["vaccine"]))
                         session_text.append(str(session["slots"]))
+
+                        #maps link
+                        session_text.append("https://www.google.com/maps/place/" + str(session["address"]))
+                        session_text.append("https://www.cowin.gov.in/home")
                         session_text.append("\n" * 1)
+
                         available = True
                         NO_SLOT_CITY = False
                         NO_SLOT_AT_ALL = False
@@ -88,7 +95,9 @@ if __name__ == "__main__":
                         city_message.append(x)
 
                     if NO_SLOT_CITY:
-                        city_message.append("xxx NO SLOT AVAILABLE FOR THIS DATE xxx\n\n")
+                        message = "xxx NO SLOT AVAILABLE FOR {} | PIN {} | {} xxx".format(str(session["name"]), str(session["pincode"]), date)
+                        print(message)
+                        city_message.append(message)
 
             if available:
                 city_message.insert(0, "Subject: AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city))
