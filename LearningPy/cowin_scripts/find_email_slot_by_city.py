@@ -123,7 +123,7 @@ if __name__ == "__main__":
                     else:
                         message = "xxx NO SLOT AVAILABLE FOR {} Yr AT {} | PIN {} | {} xxx".format(AGE, str(session["name"]), str(session["pincode"]), date)
                         print(message)
-                        city_message.append(message)
+                        # city_message.append(message)
 
             if available:
                 x = "<br>".join(city_message)
