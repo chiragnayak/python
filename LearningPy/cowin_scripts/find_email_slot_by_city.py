@@ -2,17 +2,31 @@ import traceback
 from datetime import datetime, timedelta
 import json
 import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 import requests
 import sys, webbrowser
 
 CITIES = ["363"]
-DISTRICT_MAPPING = {}
+
+DISTRICT_MAPPING = {
+    "363":"PUNE",
+    "392":"THANE",
+    "108":"CHANDIGARH"
+}
+
 DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
 AGE = 18
 RECEIVERS = ["cnayak@vmware.com", "gtarun@vmware.com", "diyewarr@vmware.com"]
 
 
-def send_email(message_to_send=None, emails_to_sent=None):
+def send_email(subject=None, message_to_send=None, emails_to_sent=None):
+
+    MESSAGE = MIMEMultipart('alternative')
+    MESSAGE['subject'] = subject
+    MESSAGE['From'] = "no_reply_vac@vmware.com"
+
     smtp_server = "smtp.vmware.com"
     port = 25  # For starttls
     sender_email = "no_reply_vac@vmware.com"
@@ -21,8 +35,11 @@ def send_email(message_to_send=None, emails_to_sent=None):
     try:
         server = smtplib.SMTP(smtp_server,port)
         for receiver in emails_to_sent:
+            MESSAGE['To'] = receiver
             print("SENDING EMAIL TO : ", receiver)
-            server.sendmail(sender_email, receiver, message_to_send)
+            email_body = MIMEText(message_to_send ,'html')
+            MESSAGE.attach(email_body)
+            server.sendmail(sender_email, receiver, MESSAGE.as_string())
         print("EMAIL SENT..")
     except Exception as e:
         exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -49,7 +66,7 @@ if __name__ == "__main__":
             city_message = list()
             display = "FOR CITY : {} | {}".format(city, date)
             NO_SLOT_CITY = True
-            city_message.append("\n\n")
+            city_message.append("<br><br>")
             city_message.append("=" * 40)
             city_message.append(display)
             city_message.append("=" * 40)
@@ -82,34 +99,35 @@ if __name__ == "__main__":
                         session_text.append("SLOT AVAILABLE")
                         session_text.append("===" * 10)
                         session_text.append(str(session["name"]))
-                        session_text.append("CENTER NAME : {}".format(str(session["name"])))
-                        session_text.append("ADDRESS : {}".format(str(session["address"])))
-                        session_text.append("PINCODE : {}".format(str(session["pincode"])))
-                        session_text.append("DATE : {}".format(str(session["date"])))
-                        session_text.append("AVAILABLE : {}".format(str(session["available_capacity"])))
+                        session_text.append("CENTER NAME : {} ".format(str(session["name"])))
+                        session_text.append("ADDRESS : {} ".format(str(session["address"])))
+                        session_text.append("PINCODE : {} ".format(str(session["pincode"])))
+                        session_text.append("DATE : {} ".format(str(session["date"])))
+                        session_text.append("AVAILABLE : {} ".format(str(session["available_capacity"])))
                         session_text.append(str(session["vaccine"]))
                         session_text.append(str(session["slots"]))
 
                         #maps link
-                        session_text.append("\nGOOGLE MAPS   : https://www.google.com/maps/place/" + str(session["address"]))
-                        session_text.append("COWIN WEBSITE : https://www.cowin.gov.in/home")
-                        session_text.append("\n" * 1)
+                        google_maps = "https://www.google.com/maps/place/" + str(session["address"])
+                        cowin_websige = "https://www.cowin.gov.in/home"
+                        session_text.append("<a href=\"{}\">LOCATION ON MAP</a>".format(google_maps))
+                        session_text.append("<a href=\"{}\">COWIN website</a>".format(cowin_websige))
+                        session_text.append("<br>" * 1)
 
                         available = True
                         NO_SLOT_CITY = False
                         NO_SLOT_AT_ALL = False
-                        x = "\n".join(session_text)
+                        x = "<br>".join(session_text)
                         city_message.append(x)
 
                     if NO_SLOT_CITY:
                         message = "xxx NO SLOT AVAILABLE FOR {} Yr AT {} | PIN {} | {} xxx".format(AGE, str(session["name"]), str(session["pincode"]), date)
                         print(message)
-                        city_message.append(message, RECEIVERS)
+                        city_message.append(message)
 
             if available:
-                city_message.insert(0, "Subject: AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city))
-                x = "\n".join(city_message)
-                send_email(x, RECEIVERS)
+                x = "<br>".join(city_message)
+                send_email("AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, DISTRICT_MAPPING[city]), x, RECEIVERS)
                 available = False
 
     # if NO_SLOT_AT_ALL:
