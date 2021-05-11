@@ -65,7 +65,6 @@ if __name__ == "__main__":
         for city in CITIES:
             city_message = list()
             display = "FOR CITY : {} | {}".format(city, date)
-            NO_SLOT_CITY = True
             city_message.append("<br><br>")
             city_message.append("=" * 40)
             city_message.append(display)
@@ -85,8 +84,10 @@ if __name__ == "__main__":
             available = False
 
             if len(response["sessions"]) == 0:
+                message_no_session = "NO CENTRE AVAILABLE"
+                print(message_no_session)
                 city_message.append("x" * 40)
-                city_message.append("NO CENTRE AVAILABLE FOR PINCODE {}".format(city))
+                city_message.append(message_no_session)
                 city_message.append("x" * 40)
                 continue
             else:
@@ -115,12 +116,11 @@ if __name__ == "__main__":
                         session_text.append("<br>" * 1)
 
                         available = True
-                        NO_SLOT_CITY = False
+                        NO_SLOT_AT_CENTER = False
                         NO_SLOT_AT_ALL = False
                         x = "<br>".join(session_text)
                         city_message.append(x)
-
-                    if NO_SLOT_CITY:
+                    else:
                         message = "xxx NO SLOT AVAILABLE FOR {} Yr AT {} | PIN {} | {} xxx".format(AGE, str(session["name"]), str(session["pincode"]), date)
                         print(message)
                         city_message.append(message)
