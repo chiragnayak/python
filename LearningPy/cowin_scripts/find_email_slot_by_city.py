@@ -104,9 +104,9 @@ if __name__ == "__main__":
                         session_text.append("ADDRESS : {} ".format(str(session["address"])))
                         session_text.append("PINCODE : {} ".format(str(session["pincode"])))
                         session_text.append("DATE : {} ".format(str(session["date"])))
-                        session_text.append("AVAILABLE : {} ".format(str(session["available_capacity"])))
-                        session_text.append(str(session["vaccine"]))
-                        session_text.append(str(session["slots"]))
+                        session_text.append("AVAILABLE CAPACITY : {} ".format(str(session["available_capacity"])))
+                        session_text.append("VACCINE TYPE : {} ".format(str(session["vaccine"])))
+                        session_text.append("SLOTS : {} ".format(str(session["slots"])))
 
                         #maps link
                         google_maps = "https://www.google.com/maps/place/" + str(session["address"])
