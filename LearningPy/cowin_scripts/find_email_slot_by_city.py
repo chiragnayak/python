@@ -64,7 +64,7 @@ if __name__ == "__main__":
     for date in DATES:
         for city in CITIES:
             city_message = list()
-            display = "FOR CITY : {} | {}".format(city, date)
+            display = "FOR DISTRICT : {} | {}".format(DISTRICT_MAPPING[city], date)
             city_message.append("<br><br>")
             city_message.append("=" * 40)
             city_message.append(display)
