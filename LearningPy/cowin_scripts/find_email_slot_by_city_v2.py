@@ -155,7 +155,6 @@ if __name__ == "__main__":
                         session_text.append("DATE : {} ".format(str(session["date"])))
                         session_text.append("AVAILABLE CAPACITY : {} ".format(str(session["available_capacity"])))
                         session_text.append("AVAILABLE DOSE {} CAPACITY : {} ".format(DOSE, str(required_dose_slot)))
-                        session_text.append("AVAILABLE CAPACITY : {} ".format(str(session["available_capacity"])))
                         session_text.append("FEE TYPE : {} ".format(str(session["fee_type"])))
                         session_text.append("TIME SLOTS : {} ".format(str(session["slots"])))
 
