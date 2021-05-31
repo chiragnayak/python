@@ -1,28 +1,27 @@
+import argparse
+import csv
+import smtplib
+import sys
 import traceback
 from datetime import datetime, timedelta
 import json
-import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import requests
-import sys, webbrowser
-
-CITIES = ["363"]
 
 DISTRICT_MAPPING = {
-    "363":"PUNE",
-    "392":"THANE",
-    "395":"MUMBAI"
+    "PUNE": "363",
+    # "THANE": "392",
+    # "MUMBAI": "395"
 }
 
-DAYS = [0, 1, 2, 3, 4, 5, 6, 7]
-AGE = 18
-RECEIVERS = ["cnayak@vmware.com", "gtarun@vmware.com", "diyewarr@vmware.com"]
+SUBSCRIBER_FILENAME = "subscription"
+
+DAYS = 14
 
 
 def send_email(subject=None, message_to_send=None, emails_to_sent=None):
-
     MESSAGE = MIMEMultipart('alternative')
     MESSAGE['subject'] = subject
     MESSAGE['From'] = "no_reply_vac@vmware.com"
@@ -30,14 +29,18 @@ def send_email(subject=None, message_to_send=None, emails_to_sent=None):
     smtp_server = "smtp.vmware.com"
     port = 25  # For starttls
     sender_email = "no_reply_vac@vmware.com"
-
+    server = None
     # Try to log in to server and send email
     try:
-        server = smtplib.SMTP(smtp_server,port)
+        server = smtplib.SMTP(smtp_server, port)
+        if emails_to_sent is None or len(emails_to_sent) == 0:
+            print("NO EMAILS TO SEND")
+            return
         for receiver in emails_to_sent:
+            receiver = receiver.strip()
             MESSAGE['To'] = receiver
             print("SENDING EMAIL TO : ", receiver)
-            email_body = MIMEText(message_to_send ,'html')
+            email_body = MIMEText(message_to_send, 'html')
             MESSAGE.attach(email_body)
             server.sendmail(sender_email, receiver, MESSAGE.as_string())
         print("EMAIL SENT..")
@@ -50,21 +53,57 @@ def send_email(subject=None, message_to_send=None, emails_to_sent=None):
         server.quit()
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='RECEIVES LIST OF CITIES TO POLL')
+    parser.add_argument('--cities', default='PUNE', help="CITIES TO POLL")
+    parser.add_argument('--age', default='18', help="CITIES TO POLL")
+    parser.add_argument('--dose', default='1', help="DIOSAGE")
+    args = parser.parse_args()
+    return args
+
+
 if __name__ == "__main__":
+
+    # get cities
+    args = parse_arguments()
+    CITIES = list(args.cities.split(","))
+    AGE = int(args.age)
+    DOSE = int(args.dose)
+
+    # get subscribers
+    subscribers = dict()
+    try:
+        SUBSCRIBER_FILENAME = SUBSCRIBER_FILENAME + "_{}.csv".format(AGE)
+        with open(SUBSCRIBER_FILENAME, 'r') as csvFile:
+            cities = csv.DictReader(csvFile)
+            for city in cities:
+                city_name = city['CITY']
+                subs_list = list(city['EMAILS'].split(","))
+                subscribers[city_name] = subs_list
+    except Exception as e:
+        print("Error Occurred - {} : {}".format(e.__class__.__name__, e))
+        print(traceback.format_exc())
+
+    finally:
+        csvFile.close()
+
     NO_SLOT_AT_ALL = True
     temp_date = datetime.today() + timedelta(days=0)
     TODAYS_DATE = temp_date.strftime('%d-%m-%Y')
 
     DATES = list()
-    for day in DAYS:
+    for day in range(0, DAYS):
         X_DATE = datetime.today() + timedelta(days=day)
         REQUIRED_DATE = X_DATE.strftime('%d-%m-%Y')
         DATES.append(REQUIRED_DATE)
 
     for date in DATES:
-        for city in CITIES:
+        for city_str in CITIES:
+            city_str = city_str.strip()
+            city = DISTRICT_MAPPING[city_str]
+
             city_message = list()
-            display = "FOR DISTRICT : {} | {}".format(DISTRICT_MAPPING[city], date)
+            display = "FOR DISTRICT : {} | {}".format(city_str, date)
             city_message.append("<br><br>")
             city_message.append("=" * 40)
             city_message.append(display)
@@ -72,13 +111,13 @@ if __name__ == "__main__":
             print(display)
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-            request_text = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id={}&date={}".format(city, date)
+            request_text = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id={}&date={}".format(
+                city, date)
             resp = requests.get(request_text, headers=headers)
 
             if resp.status_code != 200:
                 # This means something went wrong.
                 raise Exception("API FAILED -> CODE = {}".format(resp.status_code))
-
 
             response = json.loads(resp.text)
             available = False
@@ -94,7 +133,17 @@ if __name__ == "__main__":
                 for session in response["sessions"]:
                     age_limit = str(session["min_age_limit"])
                     slots_available = session["available_capacity"]
-                    if session["date"] in DATES and age_limit == str(AGE) and slots_available > 1:
+                    slot_available_dose_1 = session["available_capacity_dose1"]
+                    slot_available_dose_2 = session["available_capacity_dose2"]
+
+                    if DOSE == 1:
+                        required_dose_slot = slot_available_dose_1
+                    else:
+                        required_dose_slot = slot_available_dose_2
+
+                    if session["date"] in DATES and age_limit == str(AGE) \
+                            and slots_available > 1\
+                            and required_dose_slot > 1:
                         session_text = list()
                         session_text.append("===" * 10)
                         session_text.append("SLOT AVAILABLE")
@@ -105,10 +154,12 @@ if __name__ == "__main__":
                         session_text.append("PINCODE : {} ".format(str(session["pincode"])))
                         session_text.append("DATE : {} ".format(str(session["date"])))
                         session_text.append("AVAILABLE CAPACITY : {} ".format(str(session["available_capacity"])))
-                        session_text.append("VACCINE TYPE : {} ".format(str(session["vaccine"])))
-                        session_text.append("SLOTS : {} ".format(str(session["slots"])))
+                        session_text.append("AVAILABLE DOSE {} CAPACITY : {} ".format(DOSE, str(required_dose_slot)))
+                        session_text.append("AVAILABLE CAPACITY : {} ".format(str(session["available_capacity"])))
+                        session_text.append("FEE TYPE : {} ".format(str(session["fee_type"])))
+                        session_text.append("TIME SLOTS : {} ".format(str(session["slots"])))
 
-                        #maps link
+                        # maps link
                         google_maps = "https://www.google.com/maps/place/" + str(session["address"])
                         cowin_websige = "https://www.cowin.gov.in/home"
                         session_text.append("<a href=\"{}\">LOCATION ON MAP</a>".format(google_maps))
@@ -120,14 +171,26 @@ if __name__ == "__main__":
                         NO_SLOT_AT_ALL = False
                         x = "<br>".join(session_text)
                         city_message.append(x)
+
+                        message = "+++ SLOT AVAILABLE FOR {} Yr AT {} | PIN {} | {} +++".format(AGE,
+                                                                                                str(session["name"]),
+                                                                                                str(session["pincode"]),
+                                                                                                date)
+                        print(message)
                     else:
-                        message = "xxx NO SLOT AVAILABLE FOR {} Yr AT {} | PIN {} | {} xxx".format(AGE, str(session["name"]), str(session["pincode"]), date)
+                        message = "xxx NO SLOT REMAINING FOR {} Yr AT {} | PIN {} | {} xxx".format(AGE,
+                                                                                                   str(session["name"]),
+                                                                                                   str(session[
+                                                                                                           "pincode"]),
+                                                                                                   date)
                         print(message)
                         # city_message.append(message)
 
             if available:
                 x = "<br>".join(city_message)
-                send_email("AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, DISTRICT_MAPPING[city]), x, RECEIVERS)
+                RECEIVERS = subscribers[city_str]
+                send_email(subject="AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city_str), message_to_send=x,
+                           emails_to_sent=RECEIVERS)
                 available = False
 
     # if NO_SLOT_AT_ALL:
@@ -138,9 +201,3 @@ if __name__ == "__main__":
     #                "\n"
     #                "\n"
     #                "{}".format(TODAYS_DATE, AGE, CITIES, DATES), receiver_emails)
-
-
-
-
-
-
