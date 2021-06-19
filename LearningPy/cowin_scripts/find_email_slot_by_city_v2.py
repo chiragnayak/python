@@ -2,6 +2,7 @@ import argparse
 import csv
 import smtplib
 import sys
+import time
 import traceback
 from datetime import datetime, timedelta
 import json
@@ -9,11 +10,13 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import requests
+import traceback as tb
 
 DISTRICT_MAPPING = {
     "PUNE": "363",
-    # "THANE": "392",
-    # "MUMBAI": "395"
+    "BARPETA":"47",
+    "THANE": "392",
+    "MUMBAI": "395"
 }
 
 SUBSCRIBER_FILENAME = "subscription"
@@ -57,7 +60,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='RECEIVES LIST OF CITIES TO POLL')
     parser.add_argument('--cities', default='PUNE', help="CITIES TO POLL")
     parser.add_argument('--age', default='18', help="CITIES TO POLL")
-    parser.add_argument('--dose', default='1', help="DIOSAGE")
+    parser.add_argument('--dose', default='1', help="DOSAGE")
     args = parser.parse_args()
     return args
 
@@ -109,15 +112,23 @@ if __name__ == "__main__":
             city_message.append(display)
             city_message.append("=" * 40)
             print(display)
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-            request_text = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id={}&date={}".format(
-                city, date)
-            resp = requests.get(request_text, headers=headers)
 
-            if resp.status_code != 200:
-                # This means something went wrong.
-                raise Exception("API FAILED -> CODE = {}".format(resp.status_code))
+            try :
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+                request_text = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id={}&date={}".format(
+                    city, date)
+                resp = requests.get(request_text, headers=headers)
+
+                if resp.status_code != 200:
+                    # This means something went wrong.
+                    raise Exception("API FAILED -> CODE = {}".format(resp.status_code))
+            except Exception as e:
+                print("Error Occurred - {} : {}".format(e.__class__.__name__, e))
+                print(tb.format_exc())
+                print("SLEEPING FOR 5 MINS. Check You Data Manually in the meantime")
+                time.sleep(300)
+
 
             response = json.loads(resp.text)
             available = False
@@ -159,9 +170,14 @@ if __name__ == "__main__":
                         session_text.append("FEE TYPE : {} ".format(str(session["fee_type"])))
                         session_text.append("TIME SLOTS : {} ".format(str(session["slots"])))
 
+                        now = datetime.now()
+                        current_time = now.strftime("%H:%M:%S")
+
+                        session_text.append("PROCESSED AT : {} ".format(str(current_time)))
+
                         # maps link
                         google_maps = "https://www.google.com/maps/place/" + str(session["address"])
-                        cowin_websige = "https://www.cowin.gov.in/home"
+                        cowin_websige = "https://www.cowin.gov.in"
                         session_text.append("<a href=\"{}\">LOCATION ON MAP</a>".format(google_maps))
                         session_text.append("<a href=\"{}\">COWIN website</a>".format(cowin_websige))
                         session_text.append("<br>" * 1)
@@ -188,8 +204,9 @@ if __name__ == "__main__":
 
             if available:
                 x = "<br>".join(city_message)
-                RECEIVERS = subscribers[city_str]
-                send_email(subject="AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city_str), message_to_send=x,
+                if city_str in subscribers:
+                    RECEIVERS = subscribers[city_str]
+                    send_email(subject="AVAILABLE | AGE: {} | CITY : {}, BOOK NOW".format(AGE, city_str), message_to_send=x,
                            emails_to_sent=RECEIVERS)
                 available = False
 
