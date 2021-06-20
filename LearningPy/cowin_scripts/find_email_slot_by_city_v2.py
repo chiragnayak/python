@@ -176,7 +176,7 @@ if __name__ == "__main__":
                         session_text.append("PROCESSED AT : {} ".format(str(current_time)))
 
                         # maps link
-                        google_maps = "https://www.google.com/maps/place/" + str(session["address"])
+                        google_maps = "https://www.google.com/maps/place/" + str(session["name"])
                         cowin_websige = "https://www.cowin.gov.in"
                         session_text.append("<a href=\"{}\">LOCATION ON MAP</a>".format(google_maps))
                         session_text.append("<a href=\"{}\">COWIN website</a>".format(cowin_websige))
