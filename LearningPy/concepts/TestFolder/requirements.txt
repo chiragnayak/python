@@ -12,7 +12,7 @@ jsonpickle==1.1
 kubernetes==9.0.0
 netaddr==0.7.19
 paramiko_expect==0.2.8
-paramiko==2.5.0
+paramiko==2.10.1
 pexpect==4.7.0
 protobuf==3.8.0
 pyaml>=18.11.0
