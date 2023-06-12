@@ -27,5 +27,5 @@ class Spirograph:
 
 
 if __name__ == '__main__':
-    rWalk = Spirograph(radius=100, diff = 10)
+    rWalk = Spirograph(radius=100, diff = 5)
     rWalk.draw()
