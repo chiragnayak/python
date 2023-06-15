@@ -39,5 +39,7 @@ class SnakeFood(turtle.Turtle):
 
     def get_new_coordinates(self):
         range_x = [x for x in range(0,int(self.screen_size[0]/2)) if x % 20 == 0]
+        range_x.extend([-x for x in range(0,int(self.screen_size[0]/2)) if x % 20 == 0])
         range_y = [y for y in range(0,int(self.screen_size[1]/2)) if y % 20 == 0]
+        range_x.extend([-y for y in range(0,int(self.screen_size[1]/2)) if y % 20 == 0])
         return random.choice(range_x), random.choice(range_y),
