@@ -1,5 +1,0 @@
-A function is said to have a side effect if, 
-
-in addition to producing a value, 
-
-it modifies the caller's environment in other ways. 
