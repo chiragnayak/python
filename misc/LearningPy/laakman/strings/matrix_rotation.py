@@ -23,6 +23,10 @@ class Matrix:
         self.matrix = rotated
         return rotated
 
+    def rotate_in_place(self):
+       pass
+
+
     def print(self, matrix: [[]]):
         print("=" * 10)
         for r in range(0, len(matrix)):
