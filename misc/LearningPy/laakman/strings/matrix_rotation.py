@@ -24,10 +24,42 @@ class Matrix:
         return rotated
 
     def rotate_in_place(self):
-       pass
+        """
+        TODO
+        :return:
+        """
+        n = len(self.matrix)
+        for layer in range(int(n/2)):
+            first = layer
+            last = n - 1 - layer
+            for col in range(first, last):
+                print("processing", (first, col))
 
+                # save top
+                temp = self.matrix[first][col]
 
-    def print(self, matrix: [[]]):
+                # move left
+                #self.swap(self.matrix, first, col)
+
+                # move bottom
+
+                # move right
+
+                # shift top
+
+                continue
+
+    def swap(self, matrix, oldRow, oldCol):
+        self.print_matrix(matrix)
+        newRow = oldCol
+        newCol = len(matrix) - 1 - oldRow
+        temp = matrix[oldRow][oldCol]
+        matrix[oldRow][oldCol] = matrix[newCol][newRow]
+        matrix[newRow][newCol] = temp
+        print((oldRow, oldCol), (newRow, newCol))
+        self.print_matrix(matrix)
+
+    def print_matrix(self, matrix: [[]]):
         print("=" * 10)
         for r in range(0, len(matrix)):
             for c in range(0, len(matrix[r])):
@@ -45,12 +77,17 @@ if __name__ == "__main__":
     ]
 
     o = Matrix(m)
-    o.print(m)
-    o.rotate()
-    o.print(o.matrix)
-    o.rotate()
-    o.print(o.matrix)
-    o.rotate()
-    o.print(o.matrix)
-    o.rotate()
-    o.print(o.matrix)
+    o.print_matrix(m)
+
+    # approach # 1
+    # o.rotate()
+    # o.print(o.matrix)
+    # o.rotate()
+    # o.print(o.matrix)
+    # o.rotate()
+    # o.print(o.matrix)
+    # o.rotate()
+    # o.print(o.matrix)
+
+    # approach # 2
+    o.rotate_in_place()
