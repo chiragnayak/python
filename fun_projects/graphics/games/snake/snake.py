@@ -1,11 +1,11 @@
 import turtle
 from time import sleep
 
-from fun_projects.graphics.snake_game.game_frame import GameFrame
-from fun_projects.graphics.snake_game.message_board import MessageBoard
-from fun_projects.graphics.snake_game.scoreboard import Scoreboard
-from fun_projects.graphics.snake_game.snake_food import SnakeFood
-from fun_projects.graphics.snake_game.snake_piece import SnakePiece
+from fun_projects.graphics.games.snake.game_frame import GameFrame
+from fun_projects.graphics.games.snake.message_board import MessageBoard
+from fun_projects.graphics.games.snake.scoreboard import Scoreboard
+from fun_projects.graphics.games.snake.snake_food import SnakeFood
+from fun_projects.graphics.games.snake.snake_piece import SnakePiece
 
 
 class Snake:
@@ -14,7 +14,8 @@ class Snake:
         self.screen = turtle.Screen()
         self.snake_width = 20
         self.level = 0
-        self.food_speed = [(0,200), (5,150), (10,100), (20,80), (25,70), (30,60), (35,50), (40,40), (45,35), (50,30)]
+        self.food_speed = [(0, 200), (5, 150), (10, 100), (20, 80), (25, 70), (30, 60), (35, 50), (40, 40), (45, 35),
+                           (50, 30)]
         self.size = size
 
         # screen
@@ -40,7 +41,6 @@ class Snake:
         self.food = SnakeFood(self.screen)
         self.scoreboard = Scoreboard(0, self.top_wall + 20)
         self.message_board = MessageBoard(self.right_wall - 80, self.top_wall + 20)
-
 
     def check_hit_self(self):
         temp_head = self.head
@@ -151,8 +151,3 @@ class Snake:
         self.screen.onkeypress(self.move_down, "Down")
         self.run_snake()
         self.screen.exitonclick()
-
-
-if __name__ == '__main__':
-    s = Snake()
-    s.start_app()
