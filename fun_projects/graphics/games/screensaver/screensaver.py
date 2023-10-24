@@ -27,7 +27,7 @@ class ScreenSaver:
 
         self.screen.tracer(0)
         self.balls = []
-        for b in range(0, 40):
+        for b in range(0, 25):
             ball = Ball(self.screen, self.left_wall, self.right_wall, self.top_wall, self.bottom_wall)
             self.balls.append(ball)
         self.game_is_on = True

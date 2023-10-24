@@ -37,17 +37,11 @@ class Ball(Turtle):
 
     def move(self):
         x, y = self.pos()
-        if x < self.left_wall + 5:
-            # if hit left wall
+        if x < self.left_wall or x > self.right_wall:
+            # if hit right wall or left wall
             self.multiplier_x *= -1
-        elif x > self.right_wall - 5:
-            # if hit right wall
-            self.multiplier_x *= -1
-        elif y > self.top_wall - 5:
-            # if hit top wall
-            self.multiplier_y *= -1
-        elif y < self.bottom_wall + 5:
-            # if hit bottom wall
+        elif y > self.top_wall or y < self.bottom_wall:
+            # if hit bottom wall or top wall
             self.multiplier_y *= -1
 
         new_x = x + (self.forward_step * self.multiplier_x)
