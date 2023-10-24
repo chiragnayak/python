@@ -7,7 +7,7 @@ class IsRotation:
     def is_rotation(self, s1, s2):
         """
         split s1 with the first char of s2
-        new_string = append [1] to [0] --> mimicking rotation
+        new_string = append [1] to [0] --> mimicking rotation --> assuming clockwise rotation
         this new_string should be substring of s2, if s2 is rotation of s1
 
         :param s1:

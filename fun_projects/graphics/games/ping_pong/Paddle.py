@@ -13,12 +13,31 @@ class Paddle(Turtle):
 
         self.speed("fastest")
         self.screen = screen
+        self.draw_paddle(self.wall, 0)
+        self.screen.listen()
+
+    def draw_paddle(self, x, y):
         self.penup()
-        self.goto(wall, ((top_wall+bottom_wall)/2))
+        self.goto(x, y)
         self.speed(0)
         self.shape("square")
-        self.shapesize(4, 1)
+        self.shapesize(5, 1)
         self.color("white", "white")
-        self.size = 20
-        self.x = wall
-        self.y = ((top_wall+bottom_wall)/2)
+
+    def move_up(self):
+        current_pos = self.pos()
+        new_x = current_pos[0]
+        new_y = current_pos[1]+20
+        if (new_y + 60) > self.top_wall:
+            return
+        else:
+            self.draw_paddle(new_x, new_y)
+
+    def move_down(self):
+        current_pos = self.pos()
+        new_x = current_pos[0]
+        new_y = current_pos[1] - 20
+        if (new_y - 40) <= self.bottom_wall:
+            return
+        else:
+            self.draw_paddle(new_x, new_y)

@@ -1,8 +1,11 @@
+import time
 import turtle
 
 from fun_projects.graphics.games.ping_pong.Paddle import Paddle
+from fun_projects.graphics.games.ping_pong.ball import Ball
 from fun_projects.graphics.games.ping_pong.game_frame import GameFrame
 from fun_projects.graphics.games.ping_pong.message_board import MessageBoard
+from fun_projects.graphics.games.ping_pong.nets import Nets
 from fun_projects.graphics.games.ping_pong.scoreboard import Scoreboard
 
 
@@ -19,104 +22,46 @@ class PingPong:
         # screen
         self.screen_width = 800
         self.screen_height = 600
-        self.right_wall = self.screen_width / 2
-        self.left_wall = -(self.screen_width / 2)
-        self.top_wall = self.screen_height / 2
-        self.bottom_wall = -(self.screen_height / 2)
-
         self.screen.colormode(255)
         self.screen.bgcolor("black")
         self.screen.setup(self.screen_width + 100, self.screen_height + 100)
         self.screen.screensize(self.screen_width, self.screen_height)
-        self.screen.title("Snake Game")
+        self.screen.title("Ping Pong")
+
+        self.frame = GameFrame(self.screen)
+        self.right_wall = self.frame.screen_size[0] / 2
+        self.left_wall = -(self.frame.screen_size[0] / 2)
+        self.top_wall = self.frame.screen_size[1] / 2
+        self.bottom_wall = -(self.frame.screen_size[1] / 2)
 
         self.screen.tracer(0)
-        self.frame = GameFrame(self.screen)
+
         self.paddle_height = 40
         self.paddle_width = 20
         self.left_paddle = Paddle(self.screen, self.paddle_height, self.paddle_width, self.left_wall, self.top_wall, self.bottom_wall)
         self.right_paddle = Paddle(self.screen, self.paddle_height, self.paddle_width, self.right_wall, self.top_wall, self.bottom_wall)
 
-        self.draw_table(self.left_paddle, self.right_paddle, self.top_wall, self.bottom_wall)
+        self.nets = Nets(self.top_wall, self.bottom_wall)
+        self.ball = Ball(self.screen, self.left_wall, self.right_wall, self.top_wall, self.bottom_wall, forward_step=10)
         self.frame = GameFrame(self.screen)
-        self.scoreboard = Scoreboard(0, self.top_wall + 20)
+        self.left_scoreboard = Scoreboard(-40, self.top_wall)
+        self.right_scoreboard = Scoreboard(+40, self.top_wall)
         self.message_board = MessageBoard(self.right_wall - 80, self.top_wall + 20)
-
+        self.game_is_on = True
 
     def draw_table(self):
-        self.screen
-
-
-    def move_forward(self):
-
-        # update target coordinates for each tail
-        temp_head = self.head
-        x, y = temp_head.pos()
-        while temp_head.tail is not None:
-            temp_head.tail.x, temp_head.tail.y = x, y
-            temp_head = temp_head.tail
-            x, y = temp_head.pos()
-
-        # move every tail forward once head is moved
-        temp_head = self.head
-        temp_head.forward(20)
-        temp_head.x, temp_head.y = temp_head.pos()
-        while temp_head.tail is not None:
-            temp_head.tail.move_forward()
-            temp_head = temp_head.tail
-
-    def move_right(self):
-        current_heading = self.head.heading()
-        if current_heading == 0 or current_heading == 180:
-            pass
-        elif current_heading == 90:
-            self.head.setheading(current_heading - 90)
-        elif current_heading == 270:
-            self.head.setheading(current_heading + 90)
-
-    def move_left(self):
-        current_heading = self.head.heading()
-        if current_heading == 0 or current_heading == 180:
-            pass
-        elif current_heading == 90:
-            self.head.setheading(current_heading + 90)
-        elif current_heading == 270:
-            self.head.setheading(current_heading - 90)
-
-    def move_up(self):
-        current_heading = self.head.heading()
-        if current_heading == 0 or current_heading == 270:
-            self.head.setheading(current_heading + 90)
-        elif current_heading == 90:
-            pass
-        elif current_heading == 180:
-            self.head.setheading(current_heading - 90)
-
-    def move_down(self):
-        current_heading = self.head.heading()
-        if current_heading == 0 or current_heading == 270:
-            self.head.setheading(current_heading - 90)
-        elif current_heading == 90:
-            pass
-        elif current_heading == 180:
-            self.head.setheading(current_heading + 90)
-
-    def check_hit_wall(self):
-        x_pos, y_pos = self.head.pos()
-        if x_pos >= self.right_wall or x_pos <= self.left_wall:
-            print("Wall Hit Horizontal Plane")
-            return True
-        if y_pos >= self.top_wall or y_pos <= self.bottom_wall:
-            print("Wall Hit Vertical Plane")
-            return True
-
-        return False
+        pass
 
     def start_app(self):
         self.screen.listen()
-        self.screen.onkeypress(self.move_up, "Up")
-        self.screen.onkeypress(self.move_right, "Right")
-        self.screen.onkeypress(self.move_left, "Left")
-        self.screen.onkeypress(self.move_down, "Down")
-        self.screen.update()
+        self.screen.onkeypress(self.left_paddle.move_up, "w")
+        self.screen.onkeypress(self.left_paddle.move_down, "s")
+        self.screen.onkeypress(self.right_paddle.move_up, "i")
+        self.screen.onkeypress(self.right_paddle.move_down, "k")
+        while self.game_is_on:
+            time.sleep(0.1)
+            self.screen.update()
+            self.ball.move()
+
         self.screen.exitonclick()
+
