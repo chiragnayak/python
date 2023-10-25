@@ -42,7 +42,7 @@ class PingPong:
         self.right_paddle = Paddle(self.screen, self.paddle_height, self.paddle_width, self.right_wall, self.top_wall, self.bottom_wall)
 
         self.nets = Nets(self.top_wall, self.bottom_wall)
-        self.ball = Ball(self.screen, self.left_wall, self.right_wall, self.top_wall, self.bottom_wall, forward_step=10)
+        self.ball = Ball(self.screen, self.left_wall, self.right_wall, self.top_wall, self.bottom_wall)
         self.frame = GameFrame(self.screen)
         self.left_scoreboard = Scoreboard(-40, self.top_wall)
         self.right_scoreboard = Scoreboard(+40, self.top_wall)
@@ -58,10 +58,40 @@ class PingPong:
         self.screen.onkeypress(self.left_paddle.move_down, "s")
         self.screen.onkeypress(self.right_paddle.move_up, "i")
         self.screen.onkeypress(self.right_paddle.move_down, "k")
-        while self.game_is_on:
-            time.sleep(0.1)
-            self.screen.update()
-            self.ball.move()
+
+        for plays in range(0, 4):
+            while True:
+                time.sleep(0.0001)
+                # move the ball
+                self.ball.move()
+                self.screen.update()
+
+                # check top bottom wall collision : pass
+                if self.ball.check_t_b_wall_collision():
+                    print("TOP/BOTTOM WALL HIT ")
+
+                # if paddle hit : left
+                if self.ball.check_paddle_hit(self.left_paddle.get_range()):
+                    print("LEFT PADDLE HIT ")
+
+                if self.ball.check_paddle_hit(self.right_paddle.get_range()):
+                    print("RIGHT PADDLE HIT ")
+
+                # if hit wall left
+                if self.ball.check_l_wall_collision():
+                    print("LEFT WALL HIT !!!")
+                    self.message_board.display_message("NEXT PLAY !!!")
+                    self.left_scoreboard.increment_score()
+                    break
+
+                if self.ball.check_r_wall_collision():
+                    print("RIGHT WALL HIT !!!")
+                    self.message_board.display_message("NEXT PLAY !!!")
+                    self.right_scoreboard.increment_score()
+                    break
+
+            time.sleep(10)
+            self.ball = Ball(self.screen, self.left_wall, self.right_wall, self.top_wall, self.bottom_wall)
 
         self.screen.exitonclick()
 
