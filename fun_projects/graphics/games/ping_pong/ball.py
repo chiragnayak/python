@@ -17,13 +17,9 @@ class Ball(Turtle):
         self.setheading(random.choice([20, 40, 60, 80]))
         self.multiplier_x = random.choice([1, -1, -1, 1])
         self.multiplier_y = random.choice([1, -1, -1, 1])
-        self.colours = [(251, 244, 248), (240, 249, 245), (13, 20, 78), (221, 151, 87), (32, 94, 158), (238, 228, 110),
-                        (134, 24, 54), (208, 80, 117), (191, 77, 27), (50, 28, 18), (19, 45, 140), (118, 178, 218),
-                        (15, 47, 27), (230, 73, 47), (3, 100, 35), (206, 131, 172), (166, 54, 85), (72, 22, 35),
-                        (22, 135, 49), (141, 213, 182), (251, 225, 0), (90, 202, 160), (169, 15, 8), (94, 112, 199),
-                        (85, 81, 19), (8, 175, 210), (17, 180, 141), (237, 167, 152)]
+        self.colours = ["yellow", "white", "pink", "cyan"]
         self.forward_step = 1
-        self.draw_ball(random.randint(-self.top_wall, self.top_wall), random.randint(-self.top_wall, self.top_wall))
+        self.draw_ball(1, 1)
 
     def draw_ball(self, x, y):
         self.penup()

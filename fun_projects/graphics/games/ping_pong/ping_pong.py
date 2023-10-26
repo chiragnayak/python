@@ -52,14 +52,15 @@ class PingPong:
     def draw_table(self):
         pass
 
-    def start_app(self):
+    def start_app(self, games=2):
         self.screen.listen()
         self.screen.onkeypress(self.left_paddle.move_up, "w")
         self.screen.onkeypress(self.left_paddle.move_down, "s")
         self.screen.onkeypress(self.right_paddle.move_up, "i")
         self.screen.onkeypress(self.right_paddle.move_down, "k")
 
-        for plays in range(0, 4):
+        for plays in range(0, games):
+            self.message_board.display_message(f"GAME {plays+1} of {games}")
             while True:
                 time.sleep(0.0001)
                 # move the ball
@@ -81,17 +82,20 @@ class PingPong:
                 if self.ball.check_l_wall_collision():
                     print("LEFT WALL HIT !!!")
                     self.message_board.display_message("NEXT PLAY !!!")
-                    self.left_scoreboard.increment_score()
+                    self.right_scoreboard.increment_score()
+                    self.screen.update()
                     break
 
                 if self.ball.check_r_wall_collision():
                     print("RIGHT WALL HIT !!!")
                     self.message_board.display_message("NEXT PLAY !!!")
-                    self.right_scoreboard.increment_score()
+                    self.left_scoreboard.increment_score()
+                    self.screen.update()
                     break
 
-            time.sleep(10)
+            time.sleep(5)
+            self.ball.hideturtle() # hide previous ball
             self.ball = Ball(self.screen, self.left_wall, self.right_wall, self.top_wall, self.bottom_wall)
-
+        self.message_board.display_message(f"GAME OVER !")
         self.screen.exitonclick()
 

@@ -17,6 +17,7 @@ class Paddle(Turtle):
         self.draw_paddle(self.wall - self.offset, 0)
         current_pos = self.pos()
         self.range = self.get_range()
+        self.movement_step = 20
         self.screen.listen()
 
     def draw_paddle(self, x, y):
@@ -30,7 +31,7 @@ class Paddle(Turtle):
     def move_up(self):
         current_pos = self.pos()
         new_x = current_pos[0]
-        new_y = current_pos[1] + 10
+        new_y = current_pos[1] + self.movement_step
         if (new_y + 30) >= self.top_wall:
             return
         else:
@@ -41,7 +42,7 @@ class Paddle(Turtle):
     def move_down(self):
         current_pos = self.pos()
         new_x = current_pos[0]
-        new_y = current_pos[1] - 10
+        new_y = current_pos[1] - self.movement_step
         if (new_y - 30) <= self.bottom_wall:
             return
         else:
@@ -55,5 +56,5 @@ class Paddle(Turtle):
         offset_y = 40
         r = [(current_pos[0] + offset_x, current_pos[1] - offset_y),
                  (current_pos[0] + offset_x, current_pos[1] + offset_y)]
-        print(r)
+        # print(r)
         return r
