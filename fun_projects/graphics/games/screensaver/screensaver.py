@@ -6,10 +6,8 @@ from fun_projects.graphics.games.screensaver.game_frame import GameFrame
 
 
 class ScreenSaver:
-    def __init__(self, size=3):
+    def __init__(self, balls=40):
         self.screen = turtle.Screen()
-        self.size = size
-
         # screen
         self.screen_width = 800
         self.screen_height = 600
@@ -27,7 +25,7 @@ class ScreenSaver:
 
         self.screen.tracer(0)
         self.balls = []
-        for b in range(0, 25):
+        for b in range(0, balls):
             ball = Ball(self.screen, self.left_wall, self.right_wall, self.top_wall, self.bottom_wall)
             self.balls.append(ball)
         self.game_is_on = True

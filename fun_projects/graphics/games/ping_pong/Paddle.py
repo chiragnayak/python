@@ -24,7 +24,7 @@ class Paddle(Turtle):
         self.goto(x, y)
         self.speed(0)
         self.shape("square")
-        self.shapesize(4, 1)
+        self.shapesize(4, 0.5, 1)
         self.color("white", "white")
 
     def move_up(self):

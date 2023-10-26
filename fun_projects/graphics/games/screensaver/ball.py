@@ -33,7 +33,7 @@ class Ball(Turtle):
         self.speed(0)
         self.color(random.choice(self.colours))
         self.shape("circle")
-        self.shapesize(0.5, 0.5, 0.5)
+        self.shapesize(1, 1, 1)
 
     def move(self):
         x, y = self.pos()
