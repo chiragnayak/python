@@ -5,10 +5,30 @@ from threading import Thread, Condition
 condition variable
 
 acquire() --> acquires the lock
-release() --> releases he lock
+release() --> releases the lock
 wait() --> releases the lock automatically
 notify() --> notifies single thread
 notifyAll() --> notifies all threads
+
+Note: The wait() method releases the lock, and then blocks until another thread awakens it by calling notify() or notify_all().
+ Once awakened, wait() re-acquires the lock and returns. It is also possible to specify a timeout.
+
+Note: the notify() and notify_all() methods don’t release the lock; 
+this means that the thread or threads awakened will not return from their wait() call immediately, 
+but only when the thread that called notify() or notify_all() finally relinquishes ownership of the lock
+
+producer-consumer situation with unlimited buffer capacity:
+
+# Consume one item
+with cv:
+    while not an_item_is_available():
+        cv.wait()
+    get_an_available_item()
+
+# Produce one item
+with cv:
+    make_an_item_available()
+    cv.notify()
 
 """
 
