@@ -1,6 +1,5 @@
 m1 = [[2, 3, 4],
-      [5, 6, -3],
-      [2, 5, 10]
+      [5, 6, -3]
       ]
 
 m2 = [[1, 2, 3],
@@ -33,6 +32,15 @@ def matrix_multiply(first, second):
     print(f"{m1_row}x{m1_col} * {m2_row}x{m2_col}")
 
     # multiplication
+    for row_1 in range(0, m1_row):
+        for col_1 in range(0, m1_col):
+            print(f"({row_1},{col_1})", end=" ")
+        print("")
+    print("-------------")
+    for col_2 in range(0, m2_col):
+        for row_2 in range(0, m2_row):
+            print(f"({row_2},{col_2})")
+        print("")
 
 
 
