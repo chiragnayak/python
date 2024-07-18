@@ -1,11 +1,11 @@
 import turtle
 from time import sleep
 
-from fun_projects.graphics.games.snake.game_frame import GameFrame
-from fun_projects.graphics.games.snake.message_board import MessageBoard
-from fun_projects.graphics.games.snake.scoreboard import Scoreboard
-from fun_projects.graphics.games.snake.snake_food import SnakeFood
-from fun_projects.graphics.games.snake.snake_piece import SnakePiece
+from fun_projects.graphics.turtle.games.snake.game_frame import GameFrame
+from fun_projects.graphics.turtle.games.snake.message_board import MessageBoard
+from fun_projects.graphics.turtle.games.snake.scoreboard import Scoreboard
+from fun_projects.graphics.turtle.games.snake.snake_food import SnakeFood
+from fun_projects.graphics.turtle.games.snake.snake_piece import SnakePiece
 
 
 class Snake:

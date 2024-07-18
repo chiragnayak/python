@@ -1,8 +1,7 @@
-import time
 import turtle
 
-from fun_projects.graphics.games.screensaver.ball import Ball
-from fun_projects.graphics.games.screensaver.game_frame import GameFrame
+from fun_projects.graphics.turtle.games.screensaver.ball import Ball
+from fun_projects.graphics.turtle.games.screensaver.game_frame import GameFrame
 
 
 class ScreenSaver:

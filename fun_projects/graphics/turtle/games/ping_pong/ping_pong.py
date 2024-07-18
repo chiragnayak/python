@@ -1,12 +1,12 @@
 import time
 import turtle
 
-from fun_projects.graphics.games.ping_pong.Paddle import Paddle
-from fun_projects.graphics.games.ping_pong.ball import Ball
-from fun_projects.graphics.games.ping_pong.game_frame import GameFrame
-from fun_projects.graphics.games.ping_pong.message_board import MessageBoard
-from fun_projects.graphics.games.ping_pong.nets import Nets
-from fun_projects.graphics.games.ping_pong.scoreboard import Scoreboard
+from fun_projects.graphics.turtle.games.ping_pong.Paddle import Paddle
+from fun_projects.graphics.turtle.games.ping_pong.ball import Ball
+from fun_projects.graphics.turtle.games.ping_pong.game_frame import GameFrame
+from fun_projects.graphics.turtle.games.ping_pong.message_board import MessageBoard
+from fun_projects.graphics.turtle.games.ping_pong.nets import Nets
+from fun_projects.graphics.turtle.games.ping_pong.scoreboard import Scoreboard
 
 
 class PingPong:
